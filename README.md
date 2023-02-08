@@ -91,3 +91,10 @@ Here's a brief version of what you'll find in the data description file.
 <li><strong>SaleType</strong>: Type of sale</li>
 <li><strong>SaleCondition</strong>: Condition of sale</li>
 </ul>
+
+# Feature Engineering 
+The feature engineering part is the most important part of this project because some columns have missing data close to 99, but actually the missing features have a value of 0. For example, the pool number feature was missing 99% of the time, which in The description of the dataset said that the missing data in this column means 0, and we know that having a swimming pool has an important effect on the price of a house. The next important part in feature engineering is the normalization of skewed features, which has a positive effect on our problem.
+
+ # catboost
+ CatBoost builds upon the theory of decision trees and gradient boosting. The main idea of boosting is to sequentially combine many weak models (a model performing slightly better than random chance) and thus through greedy search create a strong competitive predictive model.The main reason I use CatBoost is that it is easy to use, efficient.
+
