@@ -93,8 +93,67 @@ Here's a brief version of what you'll find in the data description file.
 </ul>
 
 # Feature Engineering 
-The feature engineering part is the most important part of this project because some columns have missing data close to 99, but actually the missing features have a value of 0. For example, the pool number feature was missing 99% of the time, which in The description of the dataset said that the missing data in this column means 0, and we know that having a swimming pool has an important effect on the price of a house. The next important part in feature engineering is the normalization of skewed features, which has a positive effect on our problem.
+## Missing Values
+<b>PoolQC:</b> Filled with 0, as 'NA' likely means no pool.
 
- # catboost
- CatBoost builds upon the theory of decision trees and gradient boosting. The main idea of boosting is to sequentially combine many weak models (a model performing slightly better than random chance) and thus through greedy search create a strong competitive predictive model.The main reason I use CatBoost is that it is easy to use, efficient.
+<b>MiscFeature: </b> Filled with 0, as 'NA' likely means no miscellaneous feature.
+
+<b>Alley: </b> Filled with 0, as 'NA' likely means no alley access.
+
+<b>Fence: </b> Filled with 0, as 'NA' likely means no fence.
+
+<b>FireplaceQu:</b>  Filled with 0, as 'NA' likely means no fireplace.
+
+<b>MasVnrType and MasVnrArea: </b> Filled with None and 0, respectively, as 'NA' likely means no masonry veneer for these houses.
+
+<b>LotFrontage: </b> Filled with the median LotFrontage of the neighborhood, as houses in the same neighborhood likely have similar LotFrontage.
+
+<b>GarageType, GarageFinish, GarageQual, and GarageCond:</b>  Filled with 'None', as 'NA' likely means no garage.
+
+<b>GarageYrBlt, GarageArea, and GarageCars:</b>  Filled with 0, as 'NA' likely means no garage and thus no cars in the garage.
+
+<b>BsmtFinSF1, BsmtFinSF2, BsmtUnfSF, TotalBsmtSF, BsmtFullBath, and BsmtHalfBath: </b> Filled with 0, as missing values are likely due to no basement.
+
+<b>BsmtQual, BsmtCond, BsmtExposure, BsmtFinType1, and BsmtFinType2:</b>  Filled with 'None', as missing values for these categorical basement-related features likely means no basement.
+
+<b>MSZoning:</b>  Filled with 'RL', as it is the most common value.
+
+<b>Utilities: </b> Removed, as all records are 'AllPub', except for one 'NoSeWa' and two 'NA', and this feature won't help in predictive modelling.
+
+<b>Functional:</b>  Filled with 'Typ', as 'NA' likely means typical.
+
+<b>Electrical:</b>  Filled with the most frequent value 'SBrkr', as this feature mostly has that value.
+
+<b>KitchenQual:</b>  Filled with 'TA', as it is the most frequent value and there is only one missing value.
+
+<b>Exterior1st and Exterior2nd: </b> Filled with the most common string, as both features have only one missing value.
+
+<b>SaleType:</b>  Filled with 'WD', as it is the most frequent value.
+
+<b>MSSubClass:</b>  Filled with 0, as 'NA' likely means no building class.
+<b>TotalSF :</b> TotalSF is a new feature that is the sum of 'TotalBsmtSF', '1stFlrSF', and '2ndFlrSF'
+
+
+## Skew Features
+
+Calculates the skew of all numerical features in a Pandas DataFrame.
+
+Identifies features with skewness greater than 0.75 as highly skewed.
+
+Applies a Box-Cox transformation to the highly skewed features.
+
+Stores the transformed features back into the DataFrame.
+
+the skew() function from the scipy.stats module is used to calculate the skewness of each numerical feature, and the results are sorted in descending order.
+
+Next, the code identifies features with skewness greater than 0.75 and selects them for transformation using the boxcox1p() function from the scipy.special module. The Box-Cox transformation parameter lambda is set to 0.15, but this value can be adjusted as needed for the data.
+Finally, the transformed features are stored back into the original DataFrame. The code assumes that the DataFrame has columns named 'TotalBsmtSF', '1stFlrSF', and '2ndFlrSF'.
+
+Overall, this code is useful for identifying and transforming highly skewed features in a dataset, which can improve the performance of machine learning models that rely on normality assumptions.
+
+
+ # Model Training and Evaluation with CatBoostRegressor
+The first step is to perform data preprocessing with MinMaxScaler() to normalize the independent variables. The "Price" column is extracted and treated as the dependent variable "y" while the remaining columns are used as independent variable "X".
+The training data and test data are then separated using the train_test_split() function. The model is then defined and trained on the training data using fit() method of CatBoostRegressor. The evaluation of the trained model is performed on the test set, and the mean absolute error is calculated using the mean_absolute_error() function from scikit-learn.
+To get the error in original units, the predicted and true values of "Price" are transformed back to their original units using inverse_transform() and inv_boxcox1p() functions since the values were first box-cox transformed. Finally, the R-squared score is computed using r2_score() function.
 
